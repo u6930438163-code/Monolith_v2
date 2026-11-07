@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PASSWORD_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/monolith"
 PASSWORD_FILE="$PASSWORD_DIR/ui-password"
 
-if [[ -z "${MONOLITH_UI_PASSWORD:-}" ]]; then
+if [[ "${MONOLITH_PASSWORDLESS:-false}" != "true" && -z "${MONOLITH_UI_PASSWORD:-}" ]]; then
   umask 077
   mkdir -p "$PASSWORD_DIR"
   chmod 700 "$PASSWORD_DIR"
