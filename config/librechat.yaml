@@ -7,11 +7,11 @@ endpoints:
       apiKey: "ollama"
       baseURL: "${OLLAMA_BASE_URL}"
       models:
-        default: ["gemma3:4b"]
+        default: ["llama3.2-vision:11b"]
         fetch: true
       titleConvo: true
       titleModel: "current_model"
       modelDisplayLabel: "Ollama"
-# Pull model on Ollama host: ollama pull gemma3:4b
+# Pull model on Ollama host: ollama pull llama3.2-vision:11b
 # Gemini: configure GOOGLE_KEY using official LibreChat instructions.
 # Monolith tools/agents: not enabled until authenticated backend exists.
