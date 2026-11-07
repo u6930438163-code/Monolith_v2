@@ -325,7 +325,7 @@ class Handler(BaseHTTPRequestHandler):
         self._json(status, {"error": message})
 
     def _authenticated(self):
-        return _valid_session(self.headers.get("Cookie", ""))
+        return os.environ.get("MONOLITH_PASSWORDLESS", "").lower() == "true" or _valid_session(self.headers.get("Cookie", ""))
 
     def _body(self):
         try:
@@ -397,6 +397,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlsplit(self.path).path
         if not _same_origin(self):
             return self._error(403, "cross_origin_request_rejected")
+        if path == "/api/v1/login" and os.environ.get("MONOLITH_PASSWORDLESS", "").lower() == "true":
+            return self._json(200, {"authenticated": True})
         if path == "/api/v1/login":
             client = self.client_address[0]
             now = time.time()
@@ -607,7 +609,8 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     host = os.environ.get("MONOLITH_WEB_HOST", "127.0.0.1")
     port = int(os.environ.get("MONOLITH_WEB_PORT", "8000"))
-    _ui_password()
+    if os.environ.get("MONOLITH_PASSWORDLESS", "").lower() != "true":
+        _ui_password()
     server = ThreadingHTTPServer((host, port), Handler)
     server.daemon_threads = True
     server.allow_reuse_address = True
