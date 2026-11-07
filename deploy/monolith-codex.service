@@ -1,0 +1,26 @@
+[Unit]
+Description=Monolith Codex Background Worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=monolith
+Group=monolith
+WorkingDirectory=/opt/monolith
+Environment=PYTHONUNBUFFERED=1
+Environment=MONOLITH_CODEX_WORKSPACE=/opt/monolith
+Environment=MONOLITH_CODEX_DB=/var/lib/monolith-codex/jobs.sqlite3
+ExecStart=/usr/bin/python3 -m codex.worker worker
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/monolith-codex
+MemoryMax=2G
+TasksMax=128
+
+[Install]
+WantedBy=multi-user.target
