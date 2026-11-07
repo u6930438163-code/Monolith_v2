@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10120f">
+    <title>Monolith — centrum operacyjne</title>
+    <link rel="stylesheet" href="/assets/app.css">
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <main id="login" class="login-screen">
+      <form id="login-form" class="login-card">
+        <div class="brand-mark">M</div>
+        <p class="eyebrow">MONOLITH V2 · CENTRUM OPERACYJNE</p>
+        <h1>Witaj ponownie.</h1>
+        <p class="muted">Zaloguj się hasłem dostępu skonfigurowanym na serwerze.</p>
+        <label for="password">Hasło dostępu</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button class="primary-button" type="submit">Otwórz workspace <span>↗</span></button>
+        <p id="login-error" class="error-text" aria-live="polite"></p>
+      </form>
+    </main>
+
+    <div id="app" class="app-shell" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Monolith, strona główna">
+          <span class="brand-mark">M</span><span>MONOLITH<span class="brand-version"> / V2</span></span>
+        </a>
+        <div class="workspace-chip"><span class="pulse"></span><span>WORKSPACE</span><span class="chip-value">LOCAL</span></div>
+        <p class="section-label">PRZESTRZEŃ ROBOCZA</p>
+        <nav class="tool-nav" aria-label="Narzędzia">
+          <button class="nav-item active" data-view="chat"><span class="nav-icon">◈</span> Czat AI <span class="nav-shortcut">⌘ 1</span></button>
+          <button class="nav-item" data-view="terminal"><span class="nav-icon">›_</span> Terminal</button>
+          <button class="nav-item" data-view="files"><span class="nav-icon">▤</span> Eksplorator plików</button>
+          <button class="nav-item" data-view="processes"><span class="nav-icon">◫</span> Procesy</button>
+          <button class="nav-item" data-view="logs"><span class="nav-icon">≡</span> Logi</button>
+          <button class="nav-item" data-view="ollama"><span class="nav-icon">⬡</span> Ollama</button>
+          <button class="nav-item" data-view="hyperspace"><span class="nav-icon">⌁</span> Hiperprzestrzeń</button>
+        </nav>
+        <p class="section-label agent-heading">KANAŁY AGENTÓW <span>＋</span></p>
+        <nav class="agent-nav" aria-label="Kanały agentów">
+          <button class="agent-item" data-agent="Aria"><span class="agent-avatar aria">A</span><span>Aria<small>LibreChat · konfigurowana</small></span><i class="status-dot"></i></button>
+          <button class="agent-item" data-agent="Alex"><span class="agent-avatar alex">A</span><span>Alex<small>Diagnostyka · konfigurowana</small></span><i class="status-dot"></i></button>
+          <button class="agent-item" data-agent="Astyria"><span class="agent-avatar astyria">A</span><span>Astyria<small>Telemetria · konfigurowana</small></span><i class="status-dot"></i></button>
+          <button class="agent-item" data-agent="Aurelius"><span class="agent-avatar aurelius">A</span><span>Aurelius<small>Ollama · konfigurowana</small></span><i class="status-dot"></i></button>
+          <button class="agent-item all-agents" data-agent="all"><span class="agent-avatar all">✳</span><span>Wszyscy agenci<small>Wiadomość do połączonych agentów</small></span></button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="connection-line"><span id="connection-dot" class="pulse"></span><span id="connection-label">Łączenie…</span><span class="connection-lock">⌑</span></div>
+          <button id="logout" class="logout-button"><span class="user-avatar">O</span><span>Właściciel<small>Sesja prywatna</small></span><span class="logout-icon">↗</span></button>
+        </div>
+      </aside>
+
+      <section class="main-area">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-separator">/</span><strong id="view-title">Czat AI</strong></div>
+          <div class="topbar-right"><span id="live-status" class="live-status"><i></i> Łączenie</span><button id="refresh" class="icon-button" title="Odśwież dane" aria-label="Odśwież dane">↻</button><span class="topbar-avatar">O</span></div>
+        </header>
+
+        <section id="chat-view" class="view chat-layout">
+          <div class="chat-main">
+            <div class="chat-intro">
+              <span class="eyebrow">TWOJE CENTRUM DOWODZENIA</span>
+              <h1 id="chat-heading">Co dziś<br><span>zbudujemy?</span></h1>
+              <p>Rozmawiaj z lokalnym modelem Ollama lub z połączonymi agentami.</p>
+            </div>
+            <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
+            <div class="chat-composer">
+              <div id="composer-context" class="composer-context"><span class="context-icon">◈</span><span>Monolith AI</span><span class="context-model">lokalny model</span></div>
+              <form id="chat-form" class="composer-form">
+                <textarea id="chat-input" rows="1" maxlength="8000" placeholder="Napisz wiadomość..." aria-label="Wiadomość"></textarea>
+                <div class="composer-footer"><span>Enter — wyślij · Shift + Enter — nowa linia</span><button class="send-button" type="submit" aria-label="Wyślij wiadomość">↑</button></div>
+              </form>
+              <p class="composer-disclaimer">Odpowiedzi agentów pojawiają się tylko po prawdziwym połączeniu z ich API.</p>
+            </div>
+          </div>
+          <aside class="right-panel">
+            <div class="panel-heading"><span>STATUS SYSTEMU</span><button class="text-button" data-view="processes">Szczegóły ↗</button></div>
+            <div id="system-status" class="system-status"></div>
+            <div class="panel-divider"></div>
+            <div class="panel-heading"><span>AGENTY</span><span class="panel-count">04</span></div>
+            <div id="agent-status" class="agent-status-list"></div>
+            <div class="panel-divider"></div>
+            <div class="activity-heading"><span>AKTYWNOŚĆ</span><span class="live-indicator">LIVE</span></div>
+            <div id="activity-feed" class="activity-feed"><p class="empty-note">Oczekiwanie na zdarzenia systemowe…</p></div>
+            <div class="real-data-note"><span>◉</span><span><strong>Tylko prawdziwe dane</strong><small>Bez symulowanych odpowiedzi i telemetrii.</small></span></div>
+          </aside>
+        </section>
+
+        <section id="tool-view" class="view tool-view" hidden>
+          <div id="tool-content" class="tool-content"></div>
+        </section>
+
+        <footer class="statusbar"><span><i class="statusbar-dot"></i> SYSTEM ONLINE</span><span id="statusbar-message">Dane pobierane z backendu Monolith</span><span id="clock"></span></footer>
+      </section>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
