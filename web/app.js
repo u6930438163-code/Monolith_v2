@@ -334,7 +334,7 @@
   });
   document.querySelector("#logout").addEventListener("click", async () => {
     try { await api("/api/v1/logout", { method: "POST", body: "{}" }); } catch { /* The session may already have expired. */ }
-    showLogin();
+    if (window.MONOLITH_PASSWORDLESS) showApp(); else showLogin();
   });
   document.querySelectorAll(".nav-item[data-view], .text-button[data-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
   document.querySelectorAll(".agent-item[data-agent]").forEach(button => button.addEventListener("click", () => selectAgent(button.dataset.agent)));
