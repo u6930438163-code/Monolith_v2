@@ -59,4 +59,10 @@ def send(agent, message, *, timeout=15):
 
 
 def status():
-    return {agent: config(agent)["status"] for agent in AGENTS}
+    result = {}
+    for agent in AGENTS:
+        try:
+            result[agent] = config(agent)["status"]
+        except ValueError:
+            result[agent] = "not_connected"
+    return result

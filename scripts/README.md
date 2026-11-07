@@ -2,6 +2,19 @@
 
 Debian 13 / Ubuntu: review `scripts/install.sh` before executing it as root.
 
+In Codespaces, start the loopback-only MVP without root:
+
+```bash
+bash scripts/start_mvp.sh
+```
+
+This starts the read-only status API. The authenticated chat gateway starts only
+when `MONOLITH_BRIDGE_TOKEN` is configured in the environment. The script does
+not create or store credentials. Stop only processes started by the script with
+`bash scripts/start_mvp.sh stop`; logs and PID files are kept under the user's
+state directory, outside the repository. Ollama and LibreChat remain separate
+services and are reported according to actual availability.
+
 ```bash
 bash scripts/install.sh --dry-run
 sudo bash scripts/install.sh

@@ -9,6 +9,13 @@ class AgentConnectionTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             self.assertEqual(status()["Aria"], "not_connected")
 
+    def test_invalid_endpoint_is_reported_as_not_connected(self):
+        with patch.dict(os.environ, {
+            "MONOLITH_AGENT_ARIA_URL": "http://agents.example.org/aria",
+            "MONOLITH_AGENT_ARIA_TOKEN": "secret",
+        }, clear=True):
+            self.assertEqual(status()["Aria"], "not_connected")
+
     def test_https_configured(self):
         with patch.dict(os.environ, {
             "MONOLITH_AGENT_ALEX_URL": "https://agents.example.org/alex",
