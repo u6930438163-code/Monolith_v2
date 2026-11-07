@@ -11,7 +11,10 @@ check() {
   "$@" || { echo "FAILED"; fail=1; }
 }
 check "Python unit tests" python3 -m unittest discover -s tests -v
-check "Python compile" python3 -m compileall -q bridge codex core diagnostics vision tests
+check "Python compile" python3 -m compileall -q bridge codex core diagnostics vision web tests
+if command -v node >/dev/null 2>&1; then
+  check "Frontend JavaScript syntax" node --check web/app.js
+fi
 if command -v ollama >/dev/null 2>&1; then
   echo "== Ollama model status =="
   ollama list || fail=1

@@ -19,7 +19,10 @@
       showLogin();
       throw new Error("Sesja wygasła. Zaloguj się ponownie.");
     }
-    if (!response.ok) throw new Error(data.error || `Błąd serwera (${response.status})`);
+    if (!response.ok) {
+      const failures = data.results?.map(item => `${item.agent}: ${statusLabel(item.status)}`).join(", ");
+      throw new Error(failures ? `${data.error} · ${failures}` : data.error || `Błąd serwera (${response.status})`);
+    }
     return data;
   }
 

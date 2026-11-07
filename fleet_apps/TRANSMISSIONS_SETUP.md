@@ -27,3 +27,20 @@ When the operator selects a contact and clicks "Investigate transmission", the a
 Do not trust user-supplied `requested_by` or `assigned_agent` as authentication. The current CLI is for local, trusted operators only. No RF capture, network interception, autonomous agent dispatcher or live LibreChat integration has been deployed.
 
 `hyperspace_simulation` is explicitly simulated and does not represent a physically verified hyperspace transmission.
+
+## Authenticated HTTPS source for the Monolith web UI
+
+The web UI's **Hiperprzestrzeń** panel uses a separate, read-only outbound HTTPS API contract. It does not use this request registry, a simulation, a radio receiver or a signal-decoding pipeline. Configure the actual source URL and its bearer token in the backend environment only:
+
+```bash
+MONOLITH_HYPERSPACE_URL=https://YOUR-REAL-SOURCE.example/api/transmissions
+MONOLITH_HYPERSPACE_TOKEN=YOUR_SECRET
+```
+
+The source must return HTTP 200 without redirects and a JSON object in this form:
+
+```json
+{"transmissions":[{"source":"authenticated-source-id","timestamp_utc":"2026-01-01T00:00:00Z","message":"verified payload"}]}
+```
+
+Each record is checked for non-empty string fields; responses are size- and count-limited. Redirects, plain HTTP, unauthenticated responses, invalid records, and unavailable sources produce `not_connected` with no displayed transmissions. The web server reports only the source origin, never the configured path or bearer token. No compatible source endpoint or token was available during implementation; the feature remains unconnected until a real source is configured and successfully returns this contract.
