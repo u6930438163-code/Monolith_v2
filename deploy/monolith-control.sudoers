@@ -1,0 +1,5 @@
+# Install using visudo -cf before copying to /etc/sudoers.d/monolith-control
+# Restrict to exact systemctl commands; no arbitrary shell or package manager.
+monolith ALL=(root) NOPASSWD: /usr/bin/systemctl restart ollama.service
+monolith ALL=(root) NOPASSWD: /usr/bin/systemctl restart monolith-bridge.service
+monolith ALL=(root) NOPASSWD: /usr/bin/systemctl restart monolith-codex.service
