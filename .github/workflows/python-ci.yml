@@ -1,0 +1,30 @@
+name: Monolith Python checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile Python source
+        run: python -m compileall -q bridge codex core diagnostics vision tests
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Check no tracked .env
+        run: |
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "Tracked .env is forbidden"
+            exit 1
+          fi
