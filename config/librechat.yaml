@@ -1,0 +1,17 @@
+# Starting configuration for LibreChat. Validate against the deployed release.
+version: 1.2.1
+cache: true
+endpoints:
+  custom:
+    - name: "Ollama"
+      apiKey: "ollama"
+      baseURL: "${OLLAMA_BASE_URL}"
+      models:
+        default: ["llama3.2-vision:11b"]
+        fetch: true
+      titleConvo: true
+      titleModel: "current_model"
+      modelDisplayLabel: "Ollama"
+# Gemini: configure GOOGLE_KEY and enable the Google endpoint using the
+# official LibreChat instructions for the deployed version.
+# Monolith tools/agents: not enabled until authenticated backend exists.
