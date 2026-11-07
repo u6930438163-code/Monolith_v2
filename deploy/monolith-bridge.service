@@ -1,0 +1,26 @@
+[Unit]
+Description=Monolith Local Diagnostics and Vision Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=monolith
+Group=monolith
+WorkingDirectory=/opt/monolith
+Environment=PYTHONUNBUFFERED=1
+Environment=MONOLITH_BRIDGE_HOST=127.0.0.1
+Environment=MONOLITH_BRIDGE_PORT=8765
+EnvironmentFile=/etc/monolith/bridge.env
+ExecStart=/usr/bin/python3 -m bridge.server
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+MemoryMax=1G
+TasksMax=128
+
+[Install]
+WantedBy=multi-user.target
